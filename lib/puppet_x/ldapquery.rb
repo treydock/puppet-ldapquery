@@ -8,13 +8,16 @@ module PuppetX
     def initialize(
       filter,
       attributes = [],
-      opts = {}
+      base = Puppet[:ldapbase],
+      scope = 'sub',
+      server = Puppet[:ldapserver]
     )
       @filter = filter
       @attributes = attributes
-      @base = opts['base'] || Puppet[:ldapbase]
-      @host = opts['server'] || Puppet[:ldapserver]
-      scope = opts['scope'] || 'sub'
+      @base = base
+      @host = server
+
+      return unless scope
 
       if scope == 'sub'
         @scope = Net::LDAP::SearchScope_WholeSubtree

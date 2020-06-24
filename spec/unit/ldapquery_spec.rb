@@ -15,7 +15,7 @@ describe 'PuppetX::LDAPquery' do
       }
     end
 
-    let(:opts) { { 'base' => 'dc=example,dc=com' } }
+    let(:base) { 'dc=example,dc=com' }
 
     it 'fails with no filter' do
       filter = ''
@@ -26,7 +26,7 @@ describe 'PuppetX::LDAPquery' do
     it 'does not fail when using defaults in puppet.conf' do
       filter = '(uid=zach)'
       attributes = ['uid']
-      l = PuppetX::LDAPquery.new(filter, attributes, opts)
+      l = PuppetX::LDAPquery.new(filter, attributes, base)
       expect { l.ldap_config }.not_to raise_error
     end
 
@@ -37,7 +37,7 @@ describe 'PuppetX::LDAPquery' do
       wanted = [{ 'dn' => ['uid=zach,ou=users,dc=puppetlabs,dc=com'], 'uid' => ['zach'] }]
       entries = load_fixture('entries_single.obj')
 
-      l = PuppetX::LDAPquery.new(filter, attributes, opts)
+      l = PuppetX::LDAPquery.new(filter, attributes, base)
 
       allow(l).to receive(:entries).and_return(entries)
       expect(l.results).to eq(wanted)
@@ -52,7 +52,7 @@ describe 'PuppetX::LDAPquery' do
 
         entries = load_fixture('entries_objectClass.obj')
 
-        l = PuppetX::LDAPquery.new(filter, attributes, opts)
+        l = PuppetX::LDAPquery.new(filter, attributes, base)
         allow(l).to receive(:entries).and_return(entries)
         expect(l.results).to eq(wanted)
       end
@@ -64,7 +64,7 @@ describe 'PuppetX::LDAPquery' do
 
         entries = load_fixture('entries_multivalue.obj')
 
-        l = PuppetX::LDAPquery.new(filter, attributes, opts)
+        l = PuppetX::LDAPquery.new(filter, attributes, base)
         allow(l).to receive(:entries).and_return(entries)
         expect(l.results).to eq(wanted)
       end
